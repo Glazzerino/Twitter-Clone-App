@@ -4,8 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -40,17 +43,41 @@ public class TimelineActivity extends AppCompatActivity {
         adapter = new TweetsAdapter(this, tweets);
         rvFeed.setLayoutManager(new LinearLayoutManager(this));
         rvFeed.setAdapter(adapter);
-        btnLogout = findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                client.clearAccessToken();
-                finish();
-            }
-        });
+        //btnLogout = findViewById(R.id.btnLogout);
+       // btnLogout.setOnClickListener(new View.OnClickListener() {
+           // @Override
+         //   public void onClick(View view) {
+             //   client.clearAccessToken();
+             //   finish();
+           // }
+       // });
 
         client = TwitterApplication.getRestClient(this);
         populateHomeTimeLine();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true ;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pattern matching for each menu button action
+        switch (item.getItemId()) {
+            case R.id.compose: {
+                Intent intent = new Intent(this, ComposeActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.logout:{
+                client.clearAccessToken();
+                finish();
+                break;
+            }
+        }
+        return true;
     }
 
     private void populateHomeTimeLine() {

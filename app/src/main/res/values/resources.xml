@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="tweet_max_length">140</integer>
+    <integer name="tweet_max_length">280</integer>
 </resources>

@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +20,7 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ import java.util.List;
 import okhttp3.Headers;
 
 public class TimelineActivity extends AppCompatActivity {
+    private static final int REQUEST_CODE = 1337;
     private final String TAG = "TimeLineActivity";
     TwitterClient client;
     TweetsAdapter adapter;
@@ -43,14 +46,6 @@ public class TimelineActivity extends AppCompatActivity {
         adapter = new TweetsAdapter(this, tweets);
         rvFeed.setLayoutManager(new LinearLayoutManager(this));
         rvFeed.setAdapter(adapter);
-        //btnLogout = findViewById(R.id.btnLogout);
-       // btnLogout.setOnClickListener(new View.OnClickListener() {
-           // @Override
-         //   public void onClick(View view) {
-             //   client.clearAccessToken();
-             //   finish();
-           // }
-       // });
 
         client = TwitterApplication.getRestClient(this);
         populateHomeTimeLine();
@@ -68,16 +63,27 @@ public class TimelineActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.compose: {
                 Intent intent = new Intent(this, ComposeActivity.class);
-                startActivity(intent);
-                break;
+                startActivityForResult(intent, REQUEST_CODE);
+                return true;
             }
             case R.id.logout:{
                 client.clearAccessToken();
                 finish();
-                break;
+                return true;
             }
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            Tweet tweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
+            tweets.add(0, tweet);
+            adapter.notifyItemChanged(0);
+            rvFeed.smoothScrollToPosition(0);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void populateHomeTimeLine() {

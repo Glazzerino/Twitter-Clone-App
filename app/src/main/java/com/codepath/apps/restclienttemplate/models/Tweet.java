@@ -15,7 +15,7 @@ public class Tweet {
      String body;
      String createdAt;
      User author;
-     String timeStampRaw;
+     String mediaUrl;
 
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();
@@ -23,12 +23,16 @@ public class Tweet {
         tweet.body = jsonObject.getString("text");
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.author = User.fromJson(jsonObject.getJSONObject("user"));
-        tweet.timeStampRaw = jsonObject.getString("created_at");
 
         if (jsonObject.getJSONObject("entities").has("media")) {
+
             JSONArray mediaUrls = jsonObject.getJSONObject("entities").getJSONArray("media");
-            for (int i=0;i<mediaUrls.length(); i++) {
-                Log.d("MediaTweet", mediaUrls.get(i).toString());
+
+            // Twitter API specifies that if there is a photo it will be the first element in the array
+            JSONObject media = mediaUrls.getJSONObject(0);
+            if (media.getString("type").equals("photo")) {
+                tweet.mediaUrl = media.getString("media_url_https");
+                Log.d(tweet.getAuthor().name, tweet.mediaUrl);
             }
         }
         return tweet;
@@ -53,5 +57,9 @@ public class Tweet {
 
     public User getAuthor() {
         return author;
+    }
+
+    public String getMediaUrl() {
+        return mediaUrl;
     }
 }

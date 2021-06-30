@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import androidx.annotation.NonNull;
@@ -58,6 +59,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvUsername;
         ImageView ivProfileImage;
         TextView tvTimeDelta;
+        ImageView ivMedia;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,7 +67,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivProfileImage = itemView.findViewById(R.id.ivProfile);
             tvTimeDelta = itemView.findViewById(R.id.tvTimeDelta);
+            ivMedia = itemView.findViewById(R.id.ivMedia);
 
+            ivMedia.setVisibility(View.GONE);
         }
 
         public void bind(Tweet tweet) {
@@ -75,7 +79,17 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     .load(tweet.getAuthor().getProfileImageURL())
                     .transform(new CircleCrop())
                     .into(ivProfileImage);
+
+            if (tweet.getMediaUrl() != null) {
+                Glide.with(context)
+                        .load(tweet.getMediaUrl())
+                        .transform(new RoundedCorners(30))
+                        .into(ivMedia);
+                ivMedia.setVisibility(View.VISIBLE);
+            }
+
             tvTimeDelta.setText(getTimeDelta(tweet.getCreatedAt()));
+
         }
     }
 

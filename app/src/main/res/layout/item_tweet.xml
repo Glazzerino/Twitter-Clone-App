@@ -53,4 +53,20 @@
         android:layout_marginEnd="10dp"
         android:text="TimeDelta"
         tools:textSize="10sp" />
+
+    <ImageView
+        android:id="@+id/ivMedia"
+        android:layout_width="388dp"
+        android:layout_height="203dp"
+        android:layout_below="@+id/tvBody"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="-36dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="59dp"
+        android:layout_marginBottom="62dp"
+        android:maxHeight="200dp"
+        android:visibility="visible"
+        tools:maxWidth="100dp"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
 </RelativeLayout>

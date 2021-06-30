@@ -1,5 +1,7 @@
 package com.codepath.apps.restclienttemplate.adapters;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.speech.tts.TextToSpeech;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -8,17 +10,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.TimelineActivity;
+import com.codepath.apps.restclienttemplate.TweetDetailsActivity;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
+import org.parceler.Parcels;
 
 
 import java.text.ParseException;
@@ -70,6 +79,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivMedia = itemView.findViewById(R.id.ivMedia);
 
             ivMedia.setVisibility(View.GONE);
+
         }
 
         public void bind(Tweet tweet) {
@@ -84,13 +94,37 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 Glide.with(context)
                         .load(tweet.getMediaUrl())
                         .transform(new RoundedCorners(30))
-                        .into(ivMedia);
+                        .into(this.ivMedia);
                 ivMedia.setVisibility(View.VISIBLE);
             }
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "Tweet clicked", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context,TweetDetailsActivity.class);
+                    intent.putExtra("tweet", Parcels.wrap(tweet));
+                    Pair<View, String> p1 = Pair.create((View)ivProfileImage, "profile");
+                    Pair<View, String> p2 = Pair.create(ivMedia, "media");
+                    Pair<View, String> p3 = Pair.create((View)tvBody, "body");
+                    Pair<View, String> p4 = Pair.create((View)tvUsername, "username");
+                    Pair<View, String> p5 = Pair.create((View)tvTimeDelta, "time_delta");
+                    ActivityOptionsCompat options = ActivityOptionsCompat.
+                            makeSceneTransitionAnimation((Activity) context, p1, p2, p3, p4, p5);
+                    context.startActivity(intent, options.toBundle());
+                }
+            });
             tvTimeDelta.setText(getTimeDelta(tweet.getCreatedAt()));
 
         }
+    }
+
+    //Prevents weird image from incorrectly being displayed on unrelated ViewHolder
+    @Override
+    public void onViewRecycled(@NonNull @NotNull ViewHolder holder) {
+        holder.ivMedia.setVisibility(View.GONE);
+        holder.ivMedia.setImageResource(0);
+        super.onViewRecycled(holder);
     }
 
     public void clear(){
@@ -102,7 +136,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         tweets.addAll(list);
         notifyDataSetChanged();
     }
-    private String getTimeDelta(String timeStamp) {
+    public static String getTimeDelta(String timeStamp) {
        // String delta;
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);

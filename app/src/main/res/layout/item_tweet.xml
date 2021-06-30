@@ -4,11 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp">
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_marginBottom="20dp"
+    android:focusable="true">
 
     <ImageView
         android:id="@+id/ivProfile"
         android:layout_width="69dp"
+        android:transitionName="profile_picture"
         android:layout_height="56dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
@@ -20,6 +24,7 @@
         android:id="@+id/tvUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:transitionName="username"
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="1dp"
@@ -32,6 +37,7 @@
         android:id="@+id/tvBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:transitionName="body"
         android:layout_below="@+id/tvUsername"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
@@ -46,6 +52,7 @@
     <TextView
         android:id="@+id/tvTimeDelta"
         android:layout_width="wrap_content"
+        android:transitionName="time_delta"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/tvUsername"
         android:layout_alignParentEnd="true"
@@ -61,10 +68,11 @@
         android:layout_below="@+id/tvBody"
         android:layout_centerInParent="true"
         android:layout_marginStart="0dp"
+        android:transitionName="media"
         android:layout_marginLeft="-36dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="59dp"
-        android:layout_marginBottom="62dp"
+        android:layout_marginBottom="0dp"
         android:maxHeight="200dp"
         android:visibility="visible"
         tools:maxWidth="100dp"

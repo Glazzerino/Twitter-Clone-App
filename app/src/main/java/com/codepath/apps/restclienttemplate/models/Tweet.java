@@ -25,7 +25,6 @@ public class Tweet {
         tweet.author = User.fromJson(jsonObject.getJSONObject("user"));
         tweet.mediaUrl = "";
         if (jsonObject.getJSONObject("entities").has("media")) {
-
             JSONArray mediaUrls = jsonObject.getJSONObject("entities").getJSONArray("media");
 
             // Twitter API specifies that if there is a photo it will be the first element in the array

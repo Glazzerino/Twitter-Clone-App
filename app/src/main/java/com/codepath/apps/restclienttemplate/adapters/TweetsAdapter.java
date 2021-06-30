@@ -80,7 +80,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     .transform(new CircleCrop())
                     .into(ivProfileImage);
 
-            if (tweet.getMediaUrl() != null) {
+            if (tweet.getMediaUrl().length() != 0) {
                 Glide.with(context)
                         .load(tweet.getMediaUrl())
                         .transform(new RoundedCorners(30))

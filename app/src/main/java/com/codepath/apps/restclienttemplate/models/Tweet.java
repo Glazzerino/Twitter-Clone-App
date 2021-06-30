@@ -23,7 +23,7 @@ public class Tweet {
         tweet.body = jsonObject.getString("text");
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.author = User.fromJson(jsonObject.getJSONObject("user"));
-
+        tweet.mediaUrl = "";
         if (jsonObject.getJSONObject("entities").has("media")) {
 
             JSONArray mediaUrls = jsonObject.getJSONObject("entities").getJSONArray("media");

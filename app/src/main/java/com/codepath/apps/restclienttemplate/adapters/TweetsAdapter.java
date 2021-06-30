@@ -79,6 +79,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         }
     }
 
+    public void clear(){
+        tweets.clear();
+        notifyDataSetChanged();
+    }
+
+    public void adAll(List<Tweet> list) {
+        tweets.addAll(list);
+        notifyDataSetChanged();
+    }
     private String getTimeDelta(String timeStamp) {
        // String delta;
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";

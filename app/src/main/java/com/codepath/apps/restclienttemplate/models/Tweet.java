@@ -12,10 +12,10 @@ import java.util.List;
 
 @Parcel
 public class Tweet {
-    private String body;
-    private String createdAt;
-    private User author;
-    private String timeStampRaw;
+     String body;
+     String createdAt;
+     User author;
+     String timeStampRaw;
 
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();
@@ -24,6 +24,13 @@ public class Tweet {
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.author = User.fromJson(jsonObject.getJSONObject("user"));
         tweet.timeStampRaw = jsonObject.getString("created_at");
+
+        if (jsonObject.getJSONObject("entities").has("media")) {
+            JSONArray mediaUrls = jsonObject.getJSONObject("entities").getJSONArray("media");
+            for (int i=0;i<mediaUrls.length(); i++) {
+                Log.d("MediaTweet", mediaUrls.get(i).toString());
+            }
+        }
         return tweet;
     }
 

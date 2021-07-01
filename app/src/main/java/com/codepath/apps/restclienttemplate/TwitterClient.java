@@ -28,7 +28,9 @@ public class TwitterClient extends OAuthBaseClient {
 	public static final String REST_CONSUMER_KEY = BuildConfig.CONSUMER_KEY;
 	public static final String REST_CONSUMER_SECRET = BuildConfig.CONSUMER_SECRET;
 
-	// Landing page to indicate the OAuth flow worked in case Chrome for Android 25+ blocks navigation back to the app.
+	//Used for infinite pagination purposes
+
+
 	public static final String FALLBACK_URL = "https://codepath.github.io/android-rest-client-template/success.html";
 
 	// See https://developer.chrome.com/multidevice/android/intents
@@ -43,31 +45,33 @@ public class TwitterClient extends OAuthBaseClient {
 				String.format(REST_CALLBACK_URL_TEMPLATE, context.getString(R.string.intent_host),
 						context.getString(R.string.intent_scheme), context.getPackageName(), FALLBACK_URL));
 	}
-	// CHANGE THIS
-	// DEFINE METHODS for different API endpoints here
+
 	public void getHomeTimeline(JsonHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
 		params.put("since_id", 1);
+		//Get the full text of tweets
+		params.put("tweet_mode", "extended");
+		//Get only 25 tweets
 		params.put("count", 25);
 		client.get(apiUrl, params, handler);
 	}
+
 	public void postTweet(String content, JsonHttpResponseHandler handler) {
 		String apiCallUrl = getApiUrl("statuses/update.json");
 		RequestParams params = new RequestParams();
+		params.put("tweet_mode", "extended");
 		params.put("status", content);
 		client.post(apiCallUrl, params,"", handler);
 	}
-	//private String getApiUrl(String endpointUrl) {
-	//	return String.format("https:")
-	//}
-	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
-	 * 	  i.e getApiUrl("statuses/home_timeline.json");
-	 * 2. Define the parameters to pass to the request (query or body)
-	 *    i.e RequestParams params = new RequestParams("foo", "bar");
-	 * 3. Define the request method and make a call to the client
-	 *    i.e client.get(apiUrl, params, handler);
-	 *    i.e client.post(apiUrl, params, handler);
-	 */
+
+	public void getLatestTweets(JsonHttpResponseHandler handler, long maxId) {
+		String apiUrl = getApiUrl("statuses/home_timeline.json");
+		RequestParams params = new RequestParams();
+		params.put("count", 25);
+		params.put("tweet_mode", "extended");
+		params.put("max_id", maxId);
+		client.get(apiUrl, params, handler);
+	}
 }

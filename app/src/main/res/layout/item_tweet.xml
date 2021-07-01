@@ -35,7 +35,10 @@
 
     <TextView
         android:id="@+id/tvBody"
+        android:clickable="false"
+        android:focusable="false"
         android:layout_width="match_parent"
+        android:autoLink="all"
         android:layout_height="wrap_content"
         android:transitionName="body"
         android:layout_below="@+id/tvUsername"

@@ -32,8 +32,10 @@
     <TextView
         android:id="@+id/tvBodyDet"
         android:layout_width="match_parent"
+        android:maxLines="20"
         android:layout_height="wrap_content"
         android:transitionName="body"
+        android:autoLink="all"
         android:layout_below="@id/ivProfileDet"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -69,5 +71,6 @@
         android:layout_marginEnd="1dp"
         android:maxWidth="400dp"
         android:maxHeight="200dp"
+        android:visibility="gone"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 </RelativeLayout>

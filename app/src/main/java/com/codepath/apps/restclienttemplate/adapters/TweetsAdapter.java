@@ -85,17 +85,21 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         public void bind(Tweet tweet) {
             tvUsername.setText(tweet.getAuthor().getScreenName());
             tvBody.setText(tweet.getBody());
+            tvTimeDelta.setText(getTimeDelta(tweet.getCreatedAt()));
+
             Glide.with(context)
                     .load(tweet.getAuthor().getProfileImageURL())
                     .transform(new CircleCrop())
                     .into(ivProfileImage);
 
             if (tweet.getMediaUrl().length() != 0) {
+
                 Glide.with(context)
                         .load(tweet.getMediaUrl())
                         .transform(new RoundedCorners(30))
                         .into(this.ivMedia);
                 ivMedia.setVisibility(View.VISIBLE);
+                Log.d("TweetsAdapter", "Image on tweet from: " + tweet.getAuthor().getScreenName());
             }
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -103,19 +107,19 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 public void onClick(View view) {
                     Toast.makeText(context, "Tweet clicked", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context,TweetDetailsActivity.class);
+
+                    // intent + shared element animations
                     intent.putExtra("tweet", Parcels.wrap(tweet));
                     Pair<View, String> p1 = Pair.create((View)ivProfileImage, "profile");
-                    Pair<View, String> p2 = Pair.create(ivMedia, "media");
-                    Pair<View, String> p3 = Pair.create((View)tvBody, "body");
-                    Pair<View, String> p4 = Pair.create((View)tvUsername, "username");
-                    Pair<View, String> p5 = Pair.create((View)tvTimeDelta, "time_delta");
+                    Pair<View, String> p2 = Pair.create((View)tvBody, "body");
+                    Pair<View, String> p3 = Pair.create((View)tvUsername, "username");
+                    Pair<View, String> p4 = Pair.create((View)tvTimeDelta, "time_delta");
+
                     ActivityOptionsCompat options = ActivityOptionsCompat.
-                            makeSceneTransitionAnimation((Activity) context, p1, p2, p3, p4, p5);
+                            makeSceneTransitionAnimation((Activity) context, p1, p2, p3, p4);
                     context.startActivity(intent, options.toBundle());
                 }
             });
-            tvTimeDelta.setText(getTimeDelta(tweet.getCreatedAt()));
-
         }
     }
 
@@ -136,6 +140,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         tweets.addAll(list);
         notifyDataSetChanged();
     }
+
     public static String getTimeDelta(String timeStamp) {
        // String delta;
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";

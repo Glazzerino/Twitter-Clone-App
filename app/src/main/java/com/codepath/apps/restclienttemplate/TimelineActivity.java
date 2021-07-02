@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,7 +29,7 @@ import java.util.List;
 
 import okhttp3.Headers;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity  implements ComposeFragment.OnPostTweetListener  {
 
     //Value used to get tweet made by user
     //Passing the tweet using the API would be inefficient
@@ -46,14 +47,13 @@ public class TimelineActivity extends AppCompatActivity {
     private MenuItem miProgressBar;
     EndlessRecyclerViewScrollListener endlessScrollListener;
 
-    //Max_id and since_id are used to reduce reduncancy on twitter API calls made to serve the infinite scroll feature
-    //For more info check this link: https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/guides/working-with-timelines
-    private long maxId = Long.MAX_VALUE;
-    private long sinceId = 1;
-
     //keeps track of the number of items received since last API call
     //this is done because calls subsequent to the first populateHomeTimeline() call vary in number
     int newItemsSinceLastCall = 0;
+
+
+    ComposeFragment.OnPostTweetListener tweetPostListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +84,6 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 adapter.clear();
-                maxId = Long.MAX_VALUE;
-                sinceId = 1;
                 populateHomeTimeLine();
                 adapter.notifyDataSetChanged();
             }
@@ -94,6 +92,7 @@ public class TimelineActivity extends AppCompatActivity {
         populateHomeTimeLine();
         //loadMoreData(Long.MAX_VALUE);
     }
+
 
     private void loadMoreData(long maxId) {
         client.getLatestTweets(new JsonHttpResponseHandler() {
@@ -146,8 +145,6 @@ public class TimelineActivity extends AppCompatActivity {
         // Pattern matching for each menu button action
         switch (item.getItemId()) {
             case R.id.compose: {
-                Intent intent = new Intent(this, ComposeActivity.class);
-                //startActivityForResult(intent, REQUEST_CODE);
                 FragmentManager fm = getSupportFragmentManager();
                 ComposeFragment alertDialog = ComposeFragment.newInstance();
                 alertDialog.show(fm, "fragment_alert");
@@ -201,4 +198,11 @@ public class TimelineActivity extends AppCompatActivity {
         hideProgressBar();
     }
 
+    @Override
+    public void onTweetPass(Tweet tweet) {
+        //Receive new tweet made from the ComposeFragment. Insert into container and notify adapter
+        tweets.add(0, tweet);
+        adapter.notifyItemInserted(0);
+        rvFeed.smoothScrollToPosition(0);
+    }
 }

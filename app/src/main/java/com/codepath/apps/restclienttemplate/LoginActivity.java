@@ -9,7 +9,13 @@ import android.view.View;
 
 import com.codepath.apps.restclienttemplate.models.SampleModel;
 import com.codepath.apps.restclienttemplate.models.SampleModelDao;
+import com.codepath.apps.restclienttemplate.models.User;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.codepath.oauth.OAuthLoginActionBarActivity;
+
+import org.json.JSONException;
+
+import okhttp3.Headers;
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 
@@ -46,6 +52,21 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 	@Override
 	public void onLoginSuccess() {
 		Log.d("LoginActivity", "Login!");
+		TwitterApplication.getRestClient(this).getCurrentUser(new JsonHttpResponseHandler() {
+			@Override
+			public void onSuccess(int statusCode, Headers headers, JSON json) {
+				try {
+					User.setCurrentUser(User.fromJson(json.jsonObject));
+				} catch (JSONException e) {
+					Log.e("LoginActivity", "Could not parse data of current user");
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+				Log.e("LoginActivity", "Could not fetch current user: " + response);
+			}
+		});
 		 Intent i = new Intent(this, TimelineActivity.class);
 		 startActivity(i);
 	}

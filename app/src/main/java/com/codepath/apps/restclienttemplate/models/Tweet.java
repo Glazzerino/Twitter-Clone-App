@@ -23,8 +23,6 @@ public class Tweet {
         Log.d("Tweet", jsonObject.toString());
 
         tweet.body = jsonObject.getString("full_text");
-        //tweet.body = jsonObject.getString("text");
-
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.author = User.fromJson(jsonObject.getJSONObject("user"));
         tweet.id = jsonObject.getLong("id");

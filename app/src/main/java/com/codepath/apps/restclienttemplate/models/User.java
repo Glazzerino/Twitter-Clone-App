@@ -11,6 +11,7 @@ public class User {
     String name;
     String screenName;
     String profileImageURL;
+    public static User currentUser;
 
     public static User fromJson(JSONObject jsonObject) throws JSONException {
         User user = new User();
@@ -30,5 +31,12 @@ public class User {
 
     public String getProfileImageURL() {
         return profileImageURL;
+    }
+
+    public static void setCurrentUser(User user) {
+        currentUser = user;
+    }
+    public static User getCurrentUser() {
+        return currentUser;
     }
 }

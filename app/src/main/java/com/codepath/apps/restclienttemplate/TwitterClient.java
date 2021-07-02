@@ -70,6 +70,7 @@ public class TwitterClient extends OAuthBaseClient {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		RequestParams params = new RequestParams();
 		params.put("count", 25);
+		params.put("since_id", 1);
 		params.put("tweet_mode", "extended");
 		params.put("max_id", maxId);
 		client.get(apiUrl, params, handler);

@@ -7,4 +7,6 @@
     <string name="intent_host">cprest</string>
     <string name="wadup">Whats up</string>
     <string name="empty_tweet_msg">Your tweet cannot be empty</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

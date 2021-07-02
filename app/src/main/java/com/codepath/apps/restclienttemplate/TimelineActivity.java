@@ -6,15 +6,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.codepath.apps.restclienttemplate.adapters.TweetsAdapter;
+import com.codepath.apps.restclienttemplate.fragments.ComposeFragment;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -26,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Headers;
-
-import static java.lang.Math.abs;
 
 public class TimelineActivity extends AppCompatActivity {
 
@@ -75,10 +74,7 @@ public class TimelineActivity extends AppCompatActivity {
         endlessScrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                Toast.makeText(getApplicationContext(), "ENDLESS SCROLLING OMG", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "Page: " + String.valueOf(page));
-                //populateHomeTimeLine(false);
-                loadMoreData();
+                loadMoreData(tweets.get(tweets.size() - 1).id);
             }
         };
 
@@ -90,14 +86,16 @@ public class TimelineActivity extends AppCompatActivity {
                 adapter.clear();
                 maxId = Long.MAX_VALUE;
                 sinceId = 1;
-                populateHomeTimeLine(true);
+                populateHomeTimeLine();
                 adapter.notifyDataSetChanged();
             }
         });
-        populateHomeTimeLine(true);
+
+        populateHomeTimeLine();
+        //loadMoreData(Long.MAX_VALUE);
     }
 
-    private void loadMoreData() {
+    private void loadMoreData(long maxId) {
         client.getLatestTweets(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -115,7 +113,8 @@ public class TimelineActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
 
             }
-        }, tweets.get(tweets.size() - 1).id);
+            //get the max_id, which is always at the end of the list
+        }, maxId);
     }
 
     @Override
@@ -124,6 +123,16 @@ public class TimelineActivity extends AppCompatActivity {
         miProgressBar = menu.findItem(R.id.miProgressBar);
         Log.d(TAG, "Progressbar loaded!");
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    public void showProgressBar() {
+        if (miProgressBar !=null)
+            miProgressBar.setVisible(true);
+    }
+
+    public void hideProgressBar() {
+        if (miProgressBar !=null)
+            miProgressBar.setVisible(false);
     }
 
     @Override
@@ -138,7 +147,10 @@ public class TimelineActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.compose: {
                 Intent intent = new Intent(this, ComposeActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
+                //startActivityForResult(intent, REQUEST_CODE);
+                FragmentManager fm = getSupportFragmentManager();
+                ComposeFragment alertDialog = ComposeFragment.newInstance();
+                alertDialog.show(fm, "fragment_alert");
                 return true;
             }
             case R.id.logout:{
@@ -161,11 +173,8 @@ public class TimelineActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /**
-     * @about set notifySetChanged when not meaning to add additional data, like in endless scrolling
-     * @param notifySetChanged if true will notify adapter that entire set changed.
-     */
-    private void populateHomeTimeLine(boolean notifySetChanged) {
+    private void populateHomeTimeLine() {
+        showProgressBar();
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -189,7 +198,7 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.e(TAG, "Error retrieving tweets: " + String.valueOf(statusCode) + " " + response);
             }
         });
-
+        hideProgressBar();
     }
 
 }

@@ -119,6 +119,8 @@ public class ComposeFragment extends DialogFragment {
                         public void onSuccess(int statusCode, Headers headers, JSON json) {
                             try {
                                 onPostTweetListener.onTweetPass(Tweet.fromJson(json.jsonObject));
+                                //getActivity().onBackPressed();
+                                getFragmentManager().beginTransaction().remove(ComposeFragment.this).commit();
                             } catch (JSONException e) {
                                 Log.e("ComposeFragment", "Could not parse posted tweet");
                             }
@@ -130,7 +132,6 @@ public class ComposeFragment extends DialogFragment {
                         }
                     });
                 }
-                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
     }

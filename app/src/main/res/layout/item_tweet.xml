@@ -35,22 +35,21 @@
 
     <TextView
         android:id="@+id/tvBody"
-        android:clickable="false"
-        android:focusable="false"
         android:layout_width="match_parent"
-        android:autoLink="all"
         android:layout_height="wrap_content"
-        android:transitionName="body"
-        android:layout_below="@+id/tvUsername"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/tvScreenName"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="1dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="0dp"
         android:layout_toEndOf="@+id/ivProfile"
+        android:autoLink="all"
+        android:clickable="false"
         android:ellipsize="end"
+        android:focusable="false"
         android:maxLines="10"
-        android:text="TextView" />
+        android:text="TextView"
+        android:transitionName="body" />
 
     <TextView
         android:id="@+id/tvTimeDelta"
@@ -80,4 +79,16 @@
         android:visibility="visible"
         tools:maxWidth="100dp"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    <TextView
+        android:id="@+id/tvScreenName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvUsername"
+        android:layout_alignTop="@id/tvUsername"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="69dp"
+        android:layout_marginTop="35dp"
+        android:text="TextView" />
 </RelativeLayout>

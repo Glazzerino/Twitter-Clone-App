@@ -68,6 +68,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageView ivProfileImage;
         TextView tvTimeDelta;
         ImageView ivMedia;
+        TextView tvName;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -76,7 +77,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivProfileImage = itemView.findViewById(R.id.ivProfile);
             tvTimeDelta = itemView.findViewById(R.id.tvTimeDelta);
             ivMedia = itemView.findViewById(R.id.ivMedia);
-
+            tvName = itemView.findViewById(R.id.tvScreenName);
             ivMedia.setVisibility(View.GONE);
 
         }
@@ -85,7 +86,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvUsername.setText(tweet.getAuthor().getScreenName());
             tvBody.setText(tweet.getBody());
             tvTimeDelta.setText(getTimeDelta(tweet.getCreatedAt()));
-
+            tvName.setText(tweet.getAuthor().getName());
             Glide.with(context)
                     .load(tweet.getAuthor().getProfileImageURL())
                     .transform(new CircleCrop())

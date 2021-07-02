@@ -61,7 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivProfileCompose"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-56dp"
+        android:layout_marginTop="10dp"
         android:text="TextView"
         android:textSize="20sp"
         tools:layout_marginTop="7dp" />

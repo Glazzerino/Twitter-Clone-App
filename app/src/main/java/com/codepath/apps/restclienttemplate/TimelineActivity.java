@@ -1,6 +1,5 @@
 package com.codepath.apps.restclienttemplate;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,11 +46,6 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
     private MenuItem miProgressBar;
     EndlessRecyclerViewScrollListener endlessScrollListener;
 
-    //keeps track of the number of items received since last API call
-    //this is done because calls subsequent to the first populateHomeTimeline() call vary in number
-    int newItemsSinceLastCall = 0;
-
-
     ComposeFragment.OnPostTweetListener tweetPostListener;
 
 
@@ -90,7 +84,6 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
         });
 
         populateHomeTimeLine();
-        //loadMoreData(Long.MAX_VALUE);
     }
 
 
@@ -102,17 +95,19 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
                 try {
                     List<Tweet> newtweets = Tweet.fromJsonArray(jsonArray);
                     tweets.addAll(newtweets);
-                    adapter.notifyDataSetChanged();
+                    int newItemCount = jsonArray.length();
+                    //use difference between number of items and new items to feed function and avoid reloading the whole dataset
+                    adapter.notifyItemRangeInserted(tweets.size() - newItemCount- 1, tweets.size() - newItemCount);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Log.e(TAG, e.toString());
                 }
             }
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-
+                Log.e(TAG, "onFailure: " + response);
             }
-            //get the max_id, which is always at the end of the list
         }, maxId);
     }
 
@@ -181,7 +176,7 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
                     tweets.addAll(Tweet.fromJsonArray(jsonArray));
                     adapter.notifyDataSetChanged();
                     Log.d(TAG, "Tweet list size: " + String.valueOf(tweets.size()));
-                    Log.d(TAG, "new elements: " + String.valueOf(tweets.size() - newItemsSinceLastCall));
+                    Log.d(TAG, "new elements: " + String.valueOf(tweets.size() - jsonArray.length()));
 
                 } catch(JSONException e) {
                     Log.e("TimeLineActivity", "Error parsing JSON data: " + e.toString());
